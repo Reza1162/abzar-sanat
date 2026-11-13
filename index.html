@@ -6,8 +6,11 @@
 <meta name="theme-color" content="#102338">
 <title>ابزارک صنعت</title>
 <style>
+@font-face{font-family:'Vazirmatn';src:url('fonts/Vazirmatn-Regular.woff2') format('woff2');font-weight:400}
+@font-face{font-family:'Vazirmatn';src:url('fonts/Vazirmatn-Bold.woff2') format('woff2');font-weight:700}
+
 *{box-sizing:border-box}
-body{margin:0;background:#0b1420;color:#edf4fb;font-family:Tahoma,sans-serif;line-height:1.8}
+body{margin:0;background:#0b1420;color:#edf4fb;font-family:Vazirmatn,Tahoma,sans-serif;line-height:1.8}
 main{max-width:650px;margin:auto;padding:18px}
 header{padding:14px 4px 22px}
 header h1{margin:0;color:#36d6b0;font-size:27px}
@@ -212,9 +215,9 @@ function machiningTime(){
  }
  const minutes=l/v;
  if(minutes<1){
-  invalid('mt',f(minutes*60)+' ثانیه');
+  invalid('mt',f(minutes*60)+' ثانیه'+(minutes>480?' ⚠ زمان بسیار طولانی است؛ سرعت و عمق برش را بازبینی کنید':''));
  }else{
-  invalid('mt',f(minutes)+' دقیقه');
+  invalid('mt',f(minutes)+' دقیقه'+(minutes>480?' ⚠ زمان بسیار طولانی است؛ سرعت و عمق برش را بازبینی کنید':''));
  }
 }
 
