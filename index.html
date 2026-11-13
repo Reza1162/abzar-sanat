@@ -126,7 +126,7 @@ footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
 </main>
 <script>
 const $=id=>document.getElementById(id);
-const f=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:4});
+const f=n=>isFinite(n)?Number(n).toLocaleString('en-US',{maximumSignificantDigits:6}):'—';
 document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('[data-id]').forEach(x=>x.classList.toggle('active',x===b));
  document.querySelectorAll('section.panel').forEach(x=>x.classList.toggle('hide',x.id!==b.dataset.id));
