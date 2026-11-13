@@ -59,7 +59,7 @@ footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
 <option value="torque">نیوتن‌متر به پوند-فوت / برعکس</option>
 <option value="power">کیلووات به اسب‌بخار / برعکس</option>
 </select>
-<label>مقدار</label><input id="uv" type="number" value="25.4" step="any">
+<label>مقدار</label><input id="uv" type="text" inputmode="decimal" value="25.4" step="any">
 <label>جهت تبدیل</label>
 <select id="direction"><option value="1">واحد اول به دوم</option><option value="2">واحد دوم به اول</option></select>
 <button class="go" onclick="units()">محاسبه</button>
@@ -68,25 +68,25 @@ footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
 
 <section class="panel hide" id="rpm">
 <h2>دور اسپیندل CNC</h2>
-<label>سرعت برش (متر بر دقیقه)</label><input id="vc" type="number" value="120" min="0" step="any">
-<label>قطر ابزار (میلی‌متر)</label><input id="dia" type="number" value="10" min="0" step="any">
+<label>سرعت برش (متر بر دقیقه)</label><input id="vc" type="text" inputmode="decimal" value="120" min="0" step="any">
+<label>قطر ابزار (میلی‌متر)</label><input id="dia" type="text" inputmode="decimal" value="10" min="0" step="any">
 <button class="go" onclick="rpm()">محاسبه دور</button>
 <div class="result">دور نظری<strong id="rr">3,820 rpm</strong><div class="note">n = 1000 × Vc ÷ (π × D)</div></div>
 </section>
 
 <section class="panel hide" id="gear">
 <h2>دور خروجی گیربکس</h2>
-<label>دور ورودی (rpm)</label><input id="ni" type="number" value="1500" min="0" step="any">
-<label>نسبت کاهنده (مثلاً 20 به 1)</label><input id="gr" type="number" value="20" min="0" step="any">
+<label>دور ورودی (rpm)</label><input id="ni" type="text" inputmode="decimal" value="1500" min="0" step="any">
+<label>نسبت کاهنده (مثلاً 20 به 1)</label><input id="gr" type="text" inputmode="decimal" value="20" min="0" step="any">
 <button class="go" onclick="gear()">محاسبه دور خروجی</button>
 <div class="result">دور خروجی نظری<strong id="grr">75 rpm</strong><div class="note">دور خروجی = دور ورودی ÷ نسبت تبدیل</div></div>
 </section>
 
 <section class="panel hide" id="torque">
 <h2>گشتاور خروجی گیربکس</h2>
-<label>گشتاور ورودی (N·m)</label><input id="ti" type="number" value="10" min="0" step="any">
-<label>نسبت تبدیل</label><input id="tr" type="number" value="20" min="0" step="any">
-<label>راندمان (درصد)</label><input id="eff" type="number" value="90" min="1" max="100" step="any">
+<label>گشتاور ورودی (N·m)</label><input id="ti" type="text" inputmode="decimal" value="10" min="0" step="any">
+<label>نسبت تبدیل</label><input id="tr" type="text" inputmode="decimal" value="20" min="0" step="any">
+<label>راندمان (درصد)</label><input id="eff" type="text" inputmode="decimal" value="90" min="1" max="100" step="any">
 <button class="go" onclick="torque()">محاسبه گشتاور</button>
 <div class="result">گشتاور خروجی نظری<strong id="tor">180 N·m</strong><div class="note">گشتاور خروجی ≈ ورودی × نسبت × راندمان</div></div>
 </section>
@@ -94,11 +94,11 @@ footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
 <section class="panel hide" id="feed">
 <h2>سرعت پیشروی CNC</h2>
 <label>دور اسپیندل (rpm)</label>
-<input id="fn" type="number" value="3000" min="0" step="any">
+<input id="fn" type="text" inputmode="decimal" value="3000" min="0" step="any">
 <label>تعداد دندانه ابزار</label>
-<input id="fz" type="number" value="4" min="1" step="1">
+<input id="fz" type="text" inputmode="decimal" value="4" min="1" step="1">
 <label>پیشروی هر دندانه (mm/tooth)</label>
-<input id="fzv" type="number" value="0.05" min="0" step="any">
+<input id="fzv" type="text" inputmode="decimal" value="0.05" min="0" step="any">
 <button class="go" onclick="feedrate()">محاسبه پیشروی</button>
 <div class="result">سرعت پیشروی نظری
 <strong id="fr">600 mm/min</strong>
@@ -109,9 +109,9 @@ footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
 <section class="panel hide" id="machining">
 <h2>زمان تقریبی ماشین‌کاری</h2>
 <label>طول مسیر برش (mm)</label>
-<input id="ml" type="number" value="100" min="0" step="any">
+<input id="ml" type="text" inputmode="decimal" value="100" min="0" step="any">
 <label>سرعت پیشروی (mm/min)</label>
-<input id="mf" type="number" value="600" min="0" step="any">
+<input id="mf" type="text" inputmode="decimal" value="600" min="0" step="any">
 <button class="go" onclick="machiningTime()">محاسبه زمان</button>
 <div class="result">زمان نظری برش
 <strong id="mt">10 ثانیه</strong>
@@ -127,10 +127,17 @@ document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('[data-id]').forEach(x=>x.classList.toggle('active',x===b));
  document.querySelectorAll('section.panel').forEach(x=>x.classList.toggle('hide',x.id!==b.dataset.id));
 });
+function normalize(s){
+ const fa='۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩';
+ return s.replace(/[۰-۹٠-٩]/g,c=>String(fa.indexOf(c)%10))
+         .replace(/[٫،]/g,'.').replace(/٬/g,'');
+}
 function readNumber(id){
  const el=$(id);
- if(!el || el.value.trim()==='') return null;
- const n=Number(el.value);
+ if(!el) return null;
+ const raw=normalize(el.value.trim());
+ if(raw==='') return null;
+ const n=Number(raw);
  return Number.isFinite(n)?n:null;
 }
 function invalid(id,message){
