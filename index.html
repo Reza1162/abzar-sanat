@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102338">
+<title>ابزارک صنعت</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1420;color:#edf4fb;font-family:Tahoma,sans-serif;line-height:1.8}
+main{max-width:650px;margin:auto;padding:18px}
+header{padding:14px 4px 22px}
+header h1{margin:0;color:#36d6b0;font-size:27px}
+header p,.muted{color:#a8bacb;font-size:13px}
+nav{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+nav button,.panel{background:#14263a;border:1px solid #2a4057;border-radius:15px;padding:14px;color:#edf4fb}
+nav button{text-align:right;font:inherit;cursor:pointer}
+nav button.active{border-color:#36d6b0}
+nav b{display:block;font-size:14px}
+nav small{color:#a8bacb}
+.panel{margin-top:14px}
+h2{font-size:18px;margin:0 0 8px}
+label{display:block;font-size:13px;margin:12px 0 5px}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #35516b;background:#091725;color:white;font:inherit}
+button.go{width:100%;padding:12px;margin-top:15px;border:0;border-radius:10px;background:#36d6b0;color:#06221d;font:inherit;font-weight:bold}
+.result{margin-top:14px;padding:13px;background:#091c2a;border:1px solid #27534d;border-radius:12px}
+.result strong{display:block;color:#36d6b0;font-size:21px;direction:ltr;text-align:right}
+.note{font-size:11px;color:#a8bacb}
+.hide{display:none}
+footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="muted">ENGINEERING TOOLS · OFFLINE</div>
+<h1>ابزارک صنعت</h1>
+<div>محاسبات فنی برای کارگاه و CNC</div>
+<p>نسخه آزمایشی ۰.۱ | بدون نیاز به اینترنت</p>
+</header>
+
+<nav>
+<button class="active" data-id="units"><b>⇄ تبدیل واحد</b><small>طول و فشار</small></button>
+<button data-id="rpm"><b>◉ دور اسپیندل</b><small>محاسبه دور CNC</small></button>
+<button data-id="gear"><b>⚙ نسبت گیربکس</b><small>دور خروجی</small></button>
+<button data-id="torque"><b>↻ گشتاور</b><small>گشتاور خروجی</small></button>
+<button data-id="feed"><b>⚙ پیشروی CNC</b><small>سرعت پیشروی ابزار</small></button>
+<button data-id="machining"><b>◷ زمان ماشین‌کاری</b><small>زمان نظری برش</small></button>
+<button data-id="spindleTorque"><b>◉ گشتاور اسپیندل</b><small>توان و دور موتور</small></button>
+<button data-id="hydraulic"><b>↗ نیروی هیدرولیک</b><small>فشار و قطر سیلندر</small></button>
+</nav>
+
+<section class="panel" id="units">
+<h2>تبدیل واحد</h2>
+<label>نوع تبدیل</label>
+<select id="kind">
+<option value="length">میلی‌متر به اینچ / برعکس</option>
+<option value="pressure">بار به مگاپاسکال / برعکس</option>
+<option value="torque">نیوتن‌متر به پوند-فوت / برعکس</option>
+<option value="power">کیلووات به اسب‌بخار / برعکس</option>
+</select>
+<label>مقدار</label><input id="uv" type="number" value="25.4" step="any">
+<label>جهت تبدیل</label>
+<select id="direction"><option value="1">واحد اول به دوم</option><option value="2">واحد دوم به اول</option></select>
+<button class="go" onclick="units()">محاسبه</button>
+<div class="result">نتیجه<strong id="ur">1 in</strong><div class="note" id="un">25.4 mm = 1 in</div></div>
+</section>
+
+<section class="panel hide" id="rpm">
+<h2>دور اسپیندل CNC</h2>
+<label>سرعت برش (متر بر دقیقه)</label><input id="vc" type="number" value="120" min="0" step="any">
+<label>قطر ابزار (میلی‌متر)</label><input id="dia" type="number" value="10" min="0" step="any">
+<button class="go" onclick="rpm()">محاسبه دور</button>
+<div class="result">دور نظری<strong id="rr">3,820 rpm</strong><div class="note">n = 1000 × Vc ÷ (π × D)</div></div>
+</section>
+
+<section class="panel hide" id="gear">
+<h2>دور خروجی گیربکس</h2>
+<label>دور ورودی (rpm)</label><input id="ni" type="number" value="1500" min="0" step="any">
+<label>نسبت کاهنده (مثلاً 20 به 1)</label><input id="gr" type="number" value="20" min="0" step="any">
+<button class="go" onclick="gear()">محاسبه دور خروجی</button>
+<div class="result">دور خروجی نظری<strong id="grr">75 rpm</strong><div class="note">دور خروجی = دور ورودی ÷ نسبت تبدیل</div></div>
+</section>
+
+<section class="panel hide" id="torque">
+<h2>گشتاور خروجی گیربکس</h2>
+<label>گشتاور ورودی (N·m)</label><input id="ti" type="number" value="10" min="0" step="any">
+<label>نسبت تبدیل</label><input id="tr" type="number" value="20" min="0" step="any">
+<label>راندمان (درصد)</label><input id="eff" type="number" value="90" min="1" max="100" step="any">
+<button class="go" onclick="torque()">محاسبه گشتاور</button>
+<div class="result">گشتاور خروجی نظری<strong id="tor">180 N·m</strong><div class="note">گشتاور خروجی ≈ ورودی × نسبت × راندمان</div></div>
+</section>
+
+<section class="panel hide" id="feed">
+<h2>سرعت پیشروی CNC</h2>
+<label>دور اسپیندل (rpm)</label>
+<input id="fn" type="number" value="3000" min="0" step="any">
+<label>تعداد دندانه ابزار</label>
+<input id="fz" type="number" value="4" min="1" step="1">
+<label>پیشروی هر دندانه (mm/tooth)</label>
+<input id="fzv" type="number" value="0.05" min="0" step="any">
+<button class="go" onclick="feedrate()">محاسبه پیشروی</button>
+<div class="result">سرعت پیشروی نظری
+<strong id="fr">600 mm/min</strong>
+<div class="note">Vf = n × z × fz</div>
+</div>
+</section>
+
+<section class="panel hide" id="machining">
+<h2>زمان تقریبی ماشین‌کاری</h2>
+<label>طول مسیر برش (mm)</label>
+<input id="ml" type="number" value="100" min="0" step="any">
+<label>سرعت پیشروی (mm/min)</label>
+<input id="mf" type="number" value="600" min="0" step="any">
+<button class="go" onclick="machiningTime()">محاسبه زمان</button>
+<div class="result">زمان نظری برش
+<strong id="mt">10 ثانیه</strong>
+<div class="note">زمان (دقیقه) = طول مسیر ÷ سرعت پیشروی</div>
+</div>
+</section>
+<footer>ابزارک صنعت · نتایج نیازمند بررسی شرایط واقعی کار هستند.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const f=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:4});
+document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('[data-id]').forEach(x=>x.classList.toggle('active',x===b));
+ document.querySelectorAll('section.panel').forEach(x=>x.classList.toggle('hide',x.id!==b.dataset.id));
+});
+function readNumber(id){
+ const el=$(id);
+ if(!el || el.value.trim()==='') return null;
+ const n=Number(el.value);
+ return Number.isFinite(n)?n:null;
+}
+function invalid(id,message){
+ $(id).textContent=message;
+}
+function units(){
+ const v=readNumber('uv');
+ const k=$('kind').value;
+ const d=Number($('direction').value);
+ if(v===null || v<0){
+  invalid('ur','لطفاً عدد معتبر و غیرمنفی وارد کنید');
+  $('un').textContent='ورودی خالی یا نامعتبر است';
+  return;
+ }
+ const cfg={
+  length:{factor:25.4,from:'mm',to:'in'},
+  pressure:{factor:10,from:'bar',to:'MPa'},
+  torque:{factor:1.355817948,from:'N·m',to:'lbf·ft'},
+  power:{factor:0.745699872,from:'kW',to:'hp'}
+ };
+ const c=cfg[k];
+ let from=c.from,to=c.to;
+ const out=d===1?v/c.factor:v*c.factor;
+ if(d===2)[from,to]=[to,from];
+ $('ur').textContent=f(out)+' '+to;
+ $('un').textContent=f(v)+' '+from+' = '+f(out)+' '+to;
+}
+function rpm(){
+ const v=readNumber('vc'),d=readNumber('dia');
+ if(v===null||d===null||v<=0||d<=0){
+  invalid('rr','سرعت برش و قطر ابزار باید عددی بزرگ‌تر از صفر باشند');
+  return;
+ }
+ invalid('rr',f(1000*v/(Math.PI*d))+' rpm');
+}
+function gear(){
+ const n=readNumber('ni'),r=readNumber('gr');
+ if(n===null||r===null||n<0||r<=0){
+  invalid('grr','دور ورودی باید غیرمنفی و نسبت تبدیل بزرگ‌تر از صفر باشد');
+  return;
+ }
+ invalid('grr',f(n/r)+' rpm');
+}
+function torque(){
+ const t=readNumber('ti'),r=readNumber('tr'),e=readNumber('eff');
+ if(t===null||r===null||e===null||t<0||r<=0||e<=0||e>100){
+  invalid('tor','گشتاور باید غیرمنفی، نسبت مثبت و راندمان بین ۰ و ۱۰۰ باشد');
+  return;
+ }
+ invalid('tor',f(t*r*e/100)+' N·m');
+}
+
+function feedrate(){
+ const n=readNumber('fn'),z=readNumber('fz'),fz=readNumber('fzv');
+ if(n===null||z===null||fz===null||n<=0||z<1||!Number.isInteger(z)||fz<=0){
+  invalid('fr','دور، تعداد دندانه و پیشروی باید مقادیر معتبر و مثبت باشند');
+  return;
+ }
+ invalid('fr',f(n*z*fz)+' mm/min');
+}
+function machiningTime(){
+ const l=readNumber('ml'),v=readNumber('mf');
+ if(l===null||v===null||l<0||v<=0){
+  invalid('mt','طول مسیر باید غیرمنفی و سرعت پیشروی مثبت باشد');
+  return;
+ }
+ const minutes=l/v;
+ if(minutes<1){
+  invalid('mt',f(minutes*60)+' ثانیه');
+ }else{
+  invalid('mt',f(minutes)+' دقیقه');
+ }
+}
+
+
+function spindleTorque(){
+ const p=readNumber('sp'),n=readNumber('sn');
+ if(p===null||n===null||p<0||n<=0){
+  invalid('sr','توان باید غیرمنفی و دور باید بزرگ‌تر از صفر باشد');
+  return;
+ }
+ invalid('sr',f(9550*p/n)+' N·m');
+}
+function hydraulicForce(){
+ const p=readNumber('hp'),d=readNumber('hd');
+ if(p===null||d===null||p<0||d<=0){
+  invalid('hr','فشار باید غیرمنفی و قطر باید بزرگ‌تر از صفر باشد');
+  return;
+ }
+ const force=p*Math.PI*d*d/40000;
+ invalid('hr',f(force)+' kN');
+}
+
+$('kind').onchange=units;$('direction').onchange=units;
+units();rpm();gear();torque();feedrate();machiningTime();spindleTorque();hydraulicForce();
+</script>
+</body>
+</html>
