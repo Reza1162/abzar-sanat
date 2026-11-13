@@ -25,6 +25,7 @@ input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #35516b
 button.go{width:100%;padding:12px;margin-top:15px;border:0;border-radius:10px;background:#36d6b0;color:#06221d;font:inherit;font-weight:bold}
 .result{margin-top:14px;padding:13px;background:#091c2a;border:1px solid #27534d;border-radius:12px}
 .result strong{display:block;color:#36d6b0;font-size:21px;direction:ltr;text-align:right}
+.result strong.err{color:#ff7b7b;font-size:14px;direction:rtl;text-align:right}
 .note{font-size:11px;color:#a8bacb}
 .hide{display:none}
 footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
@@ -142,13 +143,18 @@ function readNumber(id){
 }
 function invalid(id,message){
  $(id).textContent=message;
+ $(id).classList.remove('err');
+}
+function showErr(id,message){
+ $(id).textContent=message;
+ $(id).classList.add('err');
 }
 function units(){
  const v=readNumber('uv');
  const k=$('kind').value;
  const d=Number($('direction').value);
  if(v===null || v<0){
-  invalid('ur','لطفاً عدد معتبر و غیرمنفی وارد کنید');
+  showErr('ur','لطفاً عدد معتبر و غیرمنفی وارد کنید');
   $('un').textContent='ورودی خالی یا نامعتبر است';
   return;
  }
@@ -168,7 +174,7 @@ function units(){
 function rpm(){
  const v=readNumber('vc'),d=readNumber('dia');
  if(v===null||d===null||v<=0||d<=0){
-  invalid('rr','سرعت برش و قطر ابزار باید عددی بزرگ‌تر از صفر باشند');
+  showErr('rr','سرعت برش و قطر ابزار باید عددی بزرگ‌تر از صفر باشند');
   return;
  }
  invalid('rr',f(1000*v/(Math.PI*d))+' rpm');
@@ -176,7 +182,7 @@ function rpm(){
 function gear(){
  const n=readNumber('ni'),r=readNumber('gr');
  if(n===null||r===null||n<0||r<=0){
-  invalid('grr','دور ورودی باید غیرمنفی و نسبت تبدیل بزرگ‌تر از صفر باشد');
+  showErr('grr','دور ورودی باید غیرمنفی و نسبت تبدیل بزرگ‌تر از صفر باشد');
   return;
  }
  invalid('grr',f(n/r)+' rpm');
@@ -184,7 +190,7 @@ function gear(){
 function torque(){
  const t=readNumber('ti'),r=readNumber('tr'),e=readNumber('eff');
  if(t===null||r===null||e===null||t<0||r<=0||e<=0||e>100){
-  invalid('tor','گشتاور باید غیرمنفی، نسبت مثبت و راندمان بین ۰ و ۱۰۰ باشد');
+  showErr('tor','گشتاور باید غیرمنفی، نسبت مثبت و راندمان بین ۰ و ۱۰۰ باشد');
   return;
  }
  invalid('tor',f(t*r*e/100)+' N·m');
@@ -193,7 +199,7 @@ function torque(){
 function feedrate(){
  const n=readNumber('fn'),z=readNumber('fz'),fz=readNumber('fzv');
  if(n===null||z===null||fz===null||n<=0||z<1||!Number.isInteger(z)||fz<=0){
-  invalid('fr','دور، تعداد دندانه و پیشروی باید مقادیر معتبر و مثبت باشند');
+  showErr('fr','دور، تعداد دندانه و پیشروی باید مقادیر معتبر و مثبت باشند');
   return;
  }
  invalid('fr',f(n*z*fz)+' mm/min');
@@ -201,7 +207,7 @@ function feedrate(){
 function machiningTime(){
  const l=readNumber('ml'),v=readNumber('mf');
  if(l===null||v===null||l<0||v<=0){
-  invalid('mt','طول مسیر باید غیرمنفی و سرعت پیشروی مثبت باشد');
+  showErr('mt','طول مسیر باید غیرمنفی و سرعت پیشروی مثبت باشد');
   return;
  }
  const minutes=l/v;
@@ -216,7 +222,7 @@ function machiningTime(){
 function spindleTorque(){
  const p=readNumber('sp'),n=readNumber('sn');
  if(p===null||n===null||p<0||n<=0){
-  invalid('sr','توان باید غیرمنفی و دور باید بزرگ‌تر از صفر باشد');
+  showErr('sr','توان باید غیرمنفی و دور باید بزرگ‌تر از صفر باشد');
   return;
  }
  invalid('sr',f(9550*p/n)+' N·m');
@@ -224,7 +230,7 @@ function spindleTorque(){
 function hydraulicForce(){
  const p=readNumber('hp'),d=readNumber('hd');
  if(p===null||d===null||p<0||d<=0){
-  invalid('hr','فشار باید غیرمنفی و قطر باید بزرگ‌تر از صفر باشد');
+  showErr('hr','فشار باید غیرمنفی و قطر باید بزرگ‌تر از صفر باشد');
   return;
  }
  const force=p*Math.PI*d*d/40000;
