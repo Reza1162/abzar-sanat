@@ -122,6 +122,33 @@ footer{text-align:center;color:#8195a9;font-size:11px;margin:20px}
 <div class="note">زمان (دقیقه) = طول مسیر ÷ سرعت پیشروی</div>
 </div>
 </section>
+<section class="panel hide" id="spindleTorque">
+<h2>گشتاور اسپیندل CNC</h2>
+<label>توان در دسترس اسپیندل (kW)</label>
+<input id="sp" type="number" value="7.5" min="0" step="any">
+<label>دور اسپیندل (rpm)</label>
+<input id="sn" type="number" value="3000" min="0" step="any">
+<button class="go" onclick="spindleTorque()">محاسبه گشتاور</button>
+<div class="result">گشتاور نظری
+<strong id="sr">23.875 N·m</strong>
+<div class="note">T (N·m) ≈ 9550 × P (kW) ÷ n (rpm)</div>
+</div>
+<p class="note">توان باید توان مکانیکی در دسترس اسپیندل باشد. تلفات انتقال و تغییرات گشتاور موتور در دورهای مختلف ممکن است نتیجه واقعی را تغییر دهند.</p>
+</section>
+
+<section class="panel hide" id="hydraulic">
+<h2>نیروی جک هیدرولیک</h2>
+<label>فشار کاری (bar)</label>
+<input id="hp" type="number" value="100" min="0" step="any">
+<label>قطر داخلی سیلندر (mm)</label>
+<input id="hd" type="number" value="50" min="0" step="any">
+<button class="go" onclick="hydraulicForce()">محاسبه نیرو</button>
+<div class="result">نیروی تئوری سمت پیستون
+<strong id="hr">19.635 kN</strong>
+<div class="note">F (kN) = P (bar) × π × D² ÷ 40000</div>
+</div>
+<p class="note">این نتیجه برای حرکت خروجی سیلندر از سمت سطح کامل پیستون است و اصطکاک، افت فشار و نیروی برگشتی را لحاظ نمی‌کند.</p>
+</section>
 <footer>ابزارک صنعت · نتایج نیازمند بررسی شرایط واقعی کار هستند.</footer>
 </main>
 <script>
